@@ -1,0 +1,14 @@
+# supported languages: "custom" (default, english), "de" (german), "fr" (french), and "pt-BR" (brazilian portuguese).
+language: custom
+
+# Maximum number of outpost a land can own, set to -1 for infinite number of outpost
+max_outposts_per_land: 1
+
+# Cost of outpost creation
+outposts_cost: 4096
+
+# Outpost teleportation cooldown
+outposts_teleport_cooldown: 60
+
+# Plugin debug
+debug: false

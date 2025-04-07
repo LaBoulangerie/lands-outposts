@@ -1,0 +1,12 @@
+name: lands-outposts
+version: ${project.version}
+main: net.laboulangerie.landsoutposts.LandsOutposts
+api-version: '1.21.1'
+authors: [LaBoulangerie,Clem]
+depend: [Vault,Lands,gringotts-lands]
+libraries:
+  - com.j256.ormlite:ormlite-jdbc:6.1
+  - com.h2database:h2:2.3.232
+commands:
+  lands-outposts:
+    aliases: [lo]
