@@ -14,7 +14,7 @@ import net.laboulangerie.landsoutposts.LandsOutposts;
 public class LandsOutpostsDatabase {
 
     private JdbcPooledConnectionSource connection;
-    private Dao<LandOutpost, Integer> outpostsDao; 
+    private Dao<LandOutpost, Long> outpostsDao; 
     private Logger logger;
 
     public LandsOutpostsDatabase(LandsOutposts landsOutposts) throws SQLException {
@@ -47,7 +47,7 @@ public class LandsOutpostsDatabase {
         return connection;
     }
 
-    public Dao<LandOutpost, Integer> getOutpostsDao() {
+    public Dao<LandOutpost, Long> getOutpostsDao() {
         return outpostsDao;
     }
 

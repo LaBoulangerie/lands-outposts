@@ -20,10 +20,14 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 public class LandsOutposts extends JavaPlugin {
+
+    public static final String LANDSOUTPOSTS_BASE_MSG = "<dark_gray>[</dark_gray><dark_green>Lands-Outposts</dark_green><dark_gray>]</dark_gray> ";
+    public static final String UNEXPECTED_EXCEPTION_MSG = LANDSOUTPOSTS_BASE_MSG + "<red>Unhandled exception... contact server admin.</red>";
 
     public static LandsOutposts instance;
     public static Logger LOGGER;
@@ -143,13 +147,21 @@ public class LandsOutposts extends JavaPlugin {
         return this.towny;
     }
 
-    public List<LandOutpost> getLandPlayerOutposts(LandPlayer landPlayer) {
+    public List<LandOutpost> getLandPlayerOutposts(LandPlayer landPlayer) throws SQLException {
+        List<LandOutpost> outposts = new ArrayList<>();
 
-        return null;
+        for (Land land : landPlayer.getLands()) {
+            outposts.addAll(this.getLandOutposts(land));
+        }
+
+        return outposts;
     }
 
-    public List<LandOutpost> getLandOutposts(Land land) {
+    public List<LandOutpost> getLandOutposts(Land land) throws SQLException {
+        return this.database.getOutpostsDao().queryBuilder().where().eq("land_id", land.getULID().toString()).query();
+    }
 
-        return null;
+    public String getLandOutpostName(LandOutpost landOutpost) {
+        return null; //TODO
     }
 }

@@ -9,10 +9,14 @@ import java.util.function.BiFunction;
 public enum LandsOutpostsLanguage {
         LANG;
 
+        public String outposts;
+        public String clickToTeleport;
+
         public void readLanguage(FileConfiguration savedLanguage) {
                 BiFunction<String, String, String> translator = (path, def) -> ChatColor.translateAlternateColorCodes('&', savedLanguage.getString(path, def));
 
-                // TODO
+                LANG.outposts = translator.apply("outposts", "Outposts");
+                LANG.clickToTeleport = translator.apply("click_to_teleport", "Click to teleport.");
 
         }
 }

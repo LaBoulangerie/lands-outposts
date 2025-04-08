@@ -3,7 +3,6 @@ package net.laboulangerie.landsoutposts.database;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
-import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -24,9 +23,9 @@ public class LandOutpost {
     }
 
     @DatabaseField(columnName = "outpost_id", generatedId = true)
-    private int id;
+    private long id;
 
-    @DatabaseField(canBeNull = false, dataType = DataType.SERIALIZABLE)
+    @DatabaseField(columnName = "land_id", canBeNull = false)
     private String landId;
 
     @DatabaseField(columnName = "world", canBeNull = false)
@@ -38,8 +37,7 @@ public class LandOutpost {
     @DatabaseField(columnName = "spawn_z", canBeNull = false)
     private double spawnZ;
 
-
-    public int getId() {
+    public long getId() {
         return this.id;
     }
 

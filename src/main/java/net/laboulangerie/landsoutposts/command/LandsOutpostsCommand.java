@@ -15,7 +15,7 @@ public class LandsOutpostsCommand {
 
     public static final LiteralCommandNode<CommandSourceStack> build(LandsOutposts landsOutposts) {
         LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal("lands-outposts");
-        root.then(TeleportCommand.command());
+        root.then(TeleportCommand.command(landsOutposts));
         root.then(ListCommand.command(landsOutposts));
 
         root.then(ClaimCommand.command());
