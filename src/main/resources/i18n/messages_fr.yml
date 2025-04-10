@@ -1,2 +1,4 @@
 outposts: "Avant-postes"
 click_to_teleport: "Cliquer pour se teleport à l'avant-poste."
+outpost_not_found: "L'avant-poste n'existe pas."
+teleport_cooldown: "Attendez encore %wait secondes avant d'essayer de vous téléporter."

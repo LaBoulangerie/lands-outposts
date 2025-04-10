@@ -2,6 +2,7 @@ package net.laboulangerie.landsoutposts.command;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -36,11 +37,11 @@ public class ListCommand {
                     List<LandOutpost> outposts = landsOutposts.getLandOutposts(land);
                     for (Iterator<LandOutpost> it = outposts.iterator(); it.hasNext(); index++) {
                         LandOutpost landOutpost = it.next();
-                        String outpostName = landsOutposts.getLandOutpostName(landOutpost);
+                        Optional<String> outpostName = landsOutposts.getLandOutpostName(landOutpost);
                         Location outpostLocation = landOutpost.getSpawn();
                         String msg = "<hover:show_text:'" + LandsOutpostsLanguage.LANG.clickToTeleport + "'><click:run_command:'/lands-outposts tp " + index + "'><dark_green>" + index + "</dark_green> ";
-                        if (outpostName != null) {
-                            player.sendRichMessage("<dark_gray>-</dark_gray> name ");
+                        if (outpostName.isPresent()) {
+                            player.sendRichMessage("<dark_gray>-</dark_gray> " + outpostName.get() + " ");
                         }
                         player.sendRichMessage(msg + "<dark_gray>-</dark_gray> <blue>"
                             + outpostLocation.getWorld().getName()

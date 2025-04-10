@@ -8,6 +8,7 @@ import com.palmergames.bukkit.towny.TownyUniverse;
 
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import me.angeschossen.lands.api.LandsIntegration;
+import me.angeschossen.lands.api.land.Area;
 import me.angeschossen.lands.api.land.Land;
 import me.angeschossen.lands.api.player.LandPlayer;
 import net.laboulangerie.landsoutposts.command.LandsOutpostsCommand;
@@ -22,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 public class LandsOutposts extends JavaPlugin {
@@ -161,7 +163,11 @@ public class LandsOutposts extends JavaPlugin {
         return this.database.getOutpostsDao().queryBuilder().where().eq("land_id", land.getULID().toString()).query();
     }
 
-    public String getLandOutpostName(LandOutpost landOutpost) {
-        return null; //TODO
+    public Optional<String> getLandOutpostName(LandOutpost landOutpost) {
+        Area area = this.lands.getArea(landOutpost.getSpawn());
+        if (area != null) {
+            return Optional.of(area.getName());
+        }
+        return Optional.empty();
     }
 }
