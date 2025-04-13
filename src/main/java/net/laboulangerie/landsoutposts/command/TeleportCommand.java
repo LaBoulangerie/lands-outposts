@@ -2,14 +2,14 @@ package net.laboulangerie.landsoutposts.command;
 
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.entity.Player;
 
 import com.mojang.brigadier.Command;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 
 import io.papermc.paper.command.brigadier.CommandSourceStack;
@@ -40,19 +40,18 @@ public class TeleportCommand {
         TeleportCommand tp = new TeleportCommand(landsOutposts);
 
         return Commands.literal("tp").requires(sender -> sender.getSender() instanceof Player)
-        .then(Commands.argument("outpost", IntegerArgumentType.integer(1))
+        .then(Commands.argument("outpost", StringArgumentType.greedyString())
             .executes(ctx -> {
                 Player player = (Player) ctx.getSource().getSender();
-                long cooldown = System.currentTimeMillis() - tp.commandCooldown.getOrDefault(player.getUniqueId(), System.currentTimeMillis());
+                long cooldown = System.currentTimeMillis() - tp.commandCooldown.getOrDefault(player.getUniqueId(), (long) 0);
 
                 if (cooldown > (LandsOutpostsConfiguration.CONF.outpostsTeleportCooldown * 1000)) {
                     tp.commandCooldown.put(player.getUniqueId(), System.currentTimeMillis());
 
                     LandPlayer landPlayer = landsOutposts.getLands().getLandPlayer(player.getUniqueId());
-                    int outpost = ctx.getArgument("outpost", int.class);
+                    String outpost = ctx.getArgument("outpost", String.class);
                     try {
-                        List<LandOutpost> outposts = landsOutposts.getLandPlayerOutposts(landPlayer);
-                        LandOutpost landOutpost = outposts.get((outpost - 1));
+                        LandOutpost landOutpost = landsOutposts.getPlayerLandsOutposts(landPlayer).get(outpost);
                         if (landOutpost != null) {
                             player.teleport(landOutpost.getSpawn());
                         } else {
@@ -63,11 +62,31 @@ public class TeleportCommand {
                         e.printStackTrace();
                     }
                 } else {
-                    player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.teleportCooldown.replace("%wait", String.valueOf(cooldown * 1000)));
+                    player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.teleportCooldown.replace("%wait", String.valueOf(LandsOutpostsConfiguration.CONF.outpostsTeleportCooldown - (cooldown / 1000))));
                 }
 
                 return Command.SINGLE_SUCCESS;
             })
+            .suggests((ctx, builder) -> CompletableFuture.supplyAsync(() -> {
+                if (ctx.getSource().getSender() instanceof Player player) {
+                    LandPlayer landPlayer = landsOutposts.getLands().getLandPlayer(player.getUniqueId());
+                    try {
+                        HashMap<String, LandOutpost> playerOutposts = landsOutposts.getPlayerLandsOutposts(landPlayer);
+                        playerOutposts.forEach((name, outpost) -> {
+                            if (builder.getRemaining().isEmpty() || name.startsWith(builder.getRemaining())) {
+                                builder.suggest(name);
+                            }
+                        });
+                        landPlayer.getLands().forEach(land -> {
+
+                        });
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                return builder.build();
+            }))
         );
     }
 }

@@ -21,7 +21,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -149,11 +150,18 @@ public class LandsOutposts extends JavaPlugin {
         return this.towny;
     }
 
-    public List<LandOutpost> getLandPlayerOutposts(LandPlayer landPlayer) throws SQLException {
-        List<LandOutpost> outposts = new ArrayList<>();
-
+    public HashMap<String, LandOutpost> getPlayerLandsOutposts(LandPlayer landPlayer) throws SQLException {
+        HashMap<String, LandOutpost> outposts = new HashMap<>();
+        
+        int index = 1;
         for (Land land : landPlayer.getLands()) {
-            outposts.addAll(this.getLandOutposts(land));
+            for (Iterator<LandOutpost> it = this.getLandOutposts(land).iterator(); it.hasNext(); index++) {
+                LandOutpost landOutpost = it.next();
+                outposts.put(String.valueOf(index), landOutpost);
+                this.getLandOutpostName(landOutpost).ifPresent(name -> {
+                    outposts.put(name, landOutpost);
+                });
+            }
         }
 
         return outposts;
@@ -165,7 +173,7 @@ public class LandsOutposts extends JavaPlugin {
 
     public Optional<String> getLandOutpostName(LandOutpost landOutpost) {
         Area area = this.lands.getArea(landOutpost.getSpawn());
-        if (area != null) {
+        if (area != null && !area.isDefault()) {
             return Optional.of(area.getName());
         }
         return Optional.empty();

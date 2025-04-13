@@ -12,6 +12,7 @@ public enum LandsOutpostsLanguage {
         public String outposts;
         public String clickToTeleport;
         public String outpostNotFound;
+        public String landNotFound;
         public String teleportCooldown;
 
         public void readLanguage(FileConfiguration savedLanguage) {
@@ -20,6 +21,7 @@ public enum LandsOutpostsLanguage {
                 LANG.outposts = translator.apply("outposts", "Outposts");
                 LANG.clickToTeleport = translator.apply("click_to_teleport", "Click to teleport.");
                 LANG.outpostNotFound = translator.apply("outpost_not_found", "Outpost not found.");
-                LANG.teleportCooldown = translator.apply("outpost_not_found", "Outpost not found.");
+                LANG.landNotFound = translator.apply("land_not_found", "Land %name not found.");
+                LANG.teleportCooldown = translator.apply("teleport_cooldown", "Please wait %wait more seconds before teleporting again.");
         }
 }

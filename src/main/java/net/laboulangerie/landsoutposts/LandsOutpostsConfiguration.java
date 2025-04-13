@@ -14,7 +14,7 @@ public enum LandsOutpostsConfiguration {
 
     public int maxOutpostsPerLand = 1;
     public int outpostsCost = 4096;
-    public int outpostsTeleportCooldown = 60000;
+    public int outpostsTeleportCooldown = 60;
 
     public boolean debug = false;
 
@@ -22,7 +22,7 @@ public enum LandsOutpostsConfiguration {
         CONF.language = savedConfig.getString("language", "custom");
         CONF.maxOutpostsPerLand = savedConfig.getInt("max_outposts_per_land", 1);
         CONF.outpostsCost = savedConfig.getInt("outposts_cost", 4096);
-        CONF.outpostsCost = savedConfig.getInt("outposts_teleport_cooldown", 4096);
+        CONF.outpostsCost = savedConfig.getInt("outposts_teleport_cooldown", 60);
         CONF.debug = savedConfig.getBoolean("debug", false);
     }
 }

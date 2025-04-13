@@ -1,4 +1,5 @@
 outposts: "Outposts"
 click_to_teleport: "Click to teleport."
 outpost_not_found: "Outpost not found."
+land_not_found: "Land %name not found."
 teleport_cooldown: "Please wait %wait more seconds before teleporting again."

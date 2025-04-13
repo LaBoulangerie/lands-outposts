@@ -26,6 +26,5 @@ public class LandsOutpostsCommand {
         }
 
         return root.build();
-
     }
 }
