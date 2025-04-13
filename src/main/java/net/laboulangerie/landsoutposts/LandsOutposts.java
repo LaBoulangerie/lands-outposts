@@ -151,6 +151,10 @@ public class LandsOutposts extends JavaPlugin {
     }
 
     public HashMap<String, LandOutpost> getPlayerLandsOutposts(LandPlayer landPlayer) throws SQLException {
+        return this.getPlayerLandsOutposts(landPlayer, true);
+    }
+
+    public HashMap<String, LandOutpost> getPlayerLandsOutposts(LandPlayer landPlayer, boolean withName) throws SQLException {
         HashMap<String, LandOutpost> outposts = new HashMap<>();
         
         int index = 1;
@@ -158,9 +162,11 @@ public class LandsOutposts extends JavaPlugin {
             for (Iterator<LandOutpost> it = this.getLandOutposts(land).iterator(); it.hasNext(); index++) {
                 LandOutpost landOutpost = it.next();
                 outposts.put(String.valueOf(index), landOutpost);
-                this.getLandOutpostName(landOutpost).ifPresent(name -> {
-                    outposts.put(name, landOutpost);
-                });
+                if (withName) {
+                    this.getLandOutpostName(landOutpost).ifPresent(name -> {
+                        outposts.put(name, landOutpost);
+                    });
+                }
             }
         }
 

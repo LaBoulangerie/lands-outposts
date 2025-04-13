@@ -1,7 +1,7 @@
 package net.laboulangerie.landsoutposts.command;
 
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -37,7 +37,7 @@ public class ListCommand {
             Player player = (Player) ctx.getSource().getSender();
             LandPlayer landPlayer = landsOutposts.getLands().getLandPlayer(player.getUniqueId());
 
-            cmd.executes(player, landPlayer.getLands());
+            cmd.executes(landPlayer, landPlayer.getLands());
 
             return Command.SINGLE_SUCCESS;
         })
@@ -53,7 +53,7 @@ public class ListCommand {
             if (lands.isEmpty()) {
                 player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.landNotFound.replace("%name", landName));
             } else {
-                cmd.executes(player, lands);
+                cmd.executes(landPlayer, lands);
             }           
 
             return Command.SINGLE_SUCCESS;
@@ -71,26 +71,28 @@ public class ListCommand {
         })));
     }
 
-    private final void executes(Player player, Collection<? extends Land> lands) {
+    private final void executes(LandPlayer landPlayer, Collection<? extends Land> lands) {
+        Player player = landPlayer.getPlayer();
         try {
-            int index = 1;
+            HashMap<String,LandOutpost> outposts = this.landsOutposts.getPlayerLandsOutposts(landPlayer, false);
             for (Land land : lands) {
                 player.sendRichMessage("<dark_gray>____.[</dark_gray> <dark_green>" + LandsOutpostsLanguage.LANG.outposts + ":</dark_green> " + land.getColorName() + "<dark_gray>].____</dark_gray>");
-                List<LandOutpost> outposts = this.landsOutposts.getLandOutposts(land);
-                for (Iterator<LandOutpost> it = outposts.iterator(); it.hasNext(); index++) {
-                    LandOutpost landOutpost = it.next();
-                    Optional<String> outpostName = this.landsOutposts.getLandOutpostName(landOutpost);
-                    Location outpostLocation = landOutpost.getSpawn();
-                    String msg = "<hover:show_text:'" + LandsOutpostsLanguage.LANG.clickToTeleport + "'><click:run_command:'/lands-outposts tp " + index + "'><dark_green>" + index + "</dark_green> ";
-                    if (outpostName.isPresent()) {
-                        msg += "<dark_gray>-</dark_gray> " + outpostName.get() + " ";
+
+                outposts.forEach((name, landOutpost) -> {
+                    if (landOutpost.getLandId().equals(land.getULID())) {
+                        Optional<String> outpostName = this.landsOutposts.getLandOutpostName(landOutpost);
+                        Location outpostLocation = landOutpost.getSpawn();
+                        String msg = "<hover:show_text:'" + LandsOutpostsLanguage.LANG.clickToTeleport + "'><click:run_command:'/lands-outposts tp " + name + "'><dark_green>" + name + "</dark_green> ";
+                        if (outpostName.isPresent()) {
+                            msg += "<dark_gray>-</dark_gray> " + outpostName.get() + " ";
+                        }
+                        player.sendRichMessage(msg + "<dark_gray>-</dark_gray> <blue>"
+                            + outpostLocation.getWorld().getName()
+                            + "</blue> <dark_gray>-</dark_gray> <blue>(" 
+                            + (int) outpostLocation.getX() + "," + (int) outpostLocation.getY() + "," + (int) outpostLocation.getZ() 
+                            + ")</blue></click></hover>");
                     }
-                    player.sendRichMessage(msg + "<dark_gray>-</dark_gray> <blue>"
-                        + outpostLocation.getWorld().getName()
-                        + "</blue> <dark_gray>-</dark_gray> <blue>(" 
-                        + (int) outpostLocation.getX() + "," + (int) outpostLocation.getY() + "," + (int) outpostLocation.getZ() 
-                        + ")</blue></click></hover>");
-                }
+                });
             }
         } catch (Exception e) {
             player.sendRichMessage(LandsOutposts.UNEXPECTED_EXCEPTION_MSG);
