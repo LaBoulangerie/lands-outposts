@@ -17,6 +17,8 @@ import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
 import me.angeschossen.lands.api.land.Land;
 import me.angeschossen.lands.api.player.LandPlayer;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.laboulangerie.landsoutposts.LandsOutposts;
 import net.laboulangerie.landsoutposts.LandsOutpostsLanguage;
 import net.laboulangerie.landsoutposts.database.LandOutpost;
@@ -76,7 +78,9 @@ public class ListCommand {
         try {
             HashMap<String,LandOutpost> outposts = this.landsOutposts.getPlayerLandsOutposts(landPlayer, false);
             for (Land land : lands) {
-                player.sendRichMessage("<dark_gray>____.[</dark_gray> <dark_green>" + LandsOutpostsLanguage.LANG.outposts + ":</dark_green> " + land.getColorName() + "<dark_gray>].____</dark_gray>");
+                player.sendRichMessage("<dark_gray>____.[</dark_gray> <dark_green>" + LandsOutpostsLanguage.LANG.outposts + ":</dark_green> "
+                + MiniMessage.miniMessage().serialize(LegacyComponentSerializer.legacySection().deserialize(land.getColorName()))
+                + "<dark_gray>].____</dark_gray>");
 
                 outposts.forEach((name, landOutpost) -> {
                     if (landOutpost.getLandId().equals(land.getULID())) {
@@ -84,7 +88,8 @@ public class ListCommand {
                         Location outpostLocation = landOutpost.getSpawn();
                         String msg = "<hover:show_text:'" + LandsOutpostsLanguage.LANG.clickToTeleport + "'><click:run_command:'/lands-outposts tp " + name + "'><dark_green>" + name + "</dark_green> ";
                         if (outpostName.isPresent()) {
-                            msg += "<dark_gray>-</dark_gray> " + outpostName.get() + " ";
+                            msg += "<dark_gray>-</dark_gray> " + MiniMessage.miniMessage().serialize(LegacyComponentSerializer.legacySection().deserialize(this.landsOutposts.getLandOutpostColorName(landOutpost, player).get()))
+                            + " ";
                         }
                         player.sendRichMessage(msg + "<dark_gray>-</dark_gray> <blue>"
                             + outpostLocation.getWorld().getName()

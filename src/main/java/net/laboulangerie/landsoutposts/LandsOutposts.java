@@ -1,5 +1,6 @@
 package net.laboulangerie.landsoutposts;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -181,6 +182,14 @@ public class LandsOutposts extends JavaPlugin {
         Area area = this.lands.getArea(landOutpost.getSpawn());
         if (area != null && !area.isDefault()) {
             return Optional.of(area.getName());
+        }
+        return Optional.empty();
+    }
+
+    public Optional<String> getLandOutpostColorName(LandOutpost landOutpost, CommandSender sender) {
+        Area area = this.lands.getArea(landOutpost.getSpawn());
+        if (area != null && !area.isDefault()) {
+            return Optional.of(area.getColorName(sender));
         }
         return Optional.empty();
     }
