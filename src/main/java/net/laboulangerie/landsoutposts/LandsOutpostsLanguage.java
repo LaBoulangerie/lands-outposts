@@ -14,6 +14,7 @@ public enum LandsOutpostsLanguage {
         public String outpostNotFound;
         public String landNotFound;
         public String teleportCooldown;
+        public String notInALand;
 
         public void readLanguage(FileConfiguration savedLanguage) {
                 BiFunction<String, String, String> translator = (path, def) -> ChatColor.translateAlternateColorCodes('&', savedLanguage.getString(path, def));
@@ -23,5 +24,6 @@ public enum LandsOutpostsLanguage {
                 LANG.outpostNotFound = translator.apply("outpost_not_found", "Outpost not found.");
                 LANG.landNotFound = translator.apply("land_not_found", "Land %name not found.");
                 LANG.teleportCooldown = translator.apply("teleport_cooldown", "Please wait %wait more seconds before teleporting again.");
+                LANG.notInALand = translator.apply("not_in_a_land", "You are not member of any land.");
         }
 }

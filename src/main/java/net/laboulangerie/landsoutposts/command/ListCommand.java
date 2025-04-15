@@ -26,6 +26,7 @@ import net.laboulangerie.landsoutposts.database.LandOutpost;
 public class ListCommand {
 
     private final LandsOutposts landsOutposts;
+    
     private ListCommand(LandsOutposts landsOutposts) {
         this.landsOutposts = landsOutposts;
     }

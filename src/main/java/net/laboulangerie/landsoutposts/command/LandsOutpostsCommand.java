@@ -18,7 +18,7 @@ public class LandsOutpostsCommand {
         root.then(TeleportCommand.command(landsOutposts));
         root.then(ListCommand.command(landsOutposts));
 
-        root.then(ClaimCommand.command());
+        root.then(ClaimCommand.command(landsOutposts));
         root.then(UnclaimCommand.command());
 
         if (landsOutposts.getTowny() != null) {
