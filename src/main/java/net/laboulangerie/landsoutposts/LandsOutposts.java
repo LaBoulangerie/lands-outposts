@@ -7,7 +7,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import com.palmergames.bukkit.towny.TownyUniverse;
 
-import io.papermc.paper.command.brigadier.Commands;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import me.angeschossen.lands.api.LandsIntegration;
 import me.angeschossen.lands.api.land.Area;
@@ -18,7 +17,6 @@ import me.angeschossen.lands.api.player.LandPlayer;
 import net.laboulangerie.landsoutposts.command.LandsOutpostsCommand;
 import net.laboulangerie.landsoutposts.database.LandOutpost;
 import net.laboulangerie.landsoutposts.database.LandsOutpostsDatabase;
-import net.laboulangerie.landsoutposts.listener.onUnclaim;
 
 import java.io.File;
 import java.io.InputStream;
@@ -91,7 +89,7 @@ public class LandsOutposts extends JavaPlugin {
             LandsOutpostsCommand.build(this, commands.registrar());
         });
 
-        getServer().getPluginManager().registerEvents(new onUnclaim(instance), this);
+        getServer().getPluginManager().registerEvents(new LandsOutpostsListener(this), this);
     }
 
     @Override
