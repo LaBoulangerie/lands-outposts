@@ -1,10 +1,12 @@
 package net.laboulangerie.landsoutposts.command;
 
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.bukkit.Chunk;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.mojang.brigadier.Command;
@@ -16,8 +18,12 @@ import io.papermc.paper.command.brigadier.Commands;
 import me.angeschossen.lands.api.flags.type.Flags;
 import me.angeschossen.lands.api.land.Land;
 import me.angeschossen.lands.api.player.LandPlayer;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.laboulangerie.landsoutposts.LandsOutposts;
+import net.laboulangerie.landsoutposts.LandsOutpostsConfiguration;
 import net.laboulangerie.landsoutposts.LandsOutpostsLanguage;
+import net.laboulangerie.landsoutposts.database.LandOutpost;
 
 public class ClaimCommand {
 
@@ -40,7 +46,12 @@ public class ClaimCommand {
             if (lands.isEmpty()) {
                 player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.notInALand);
             } else if (lands.size() == 1) {
-                cmd.executes(landPlayer, lands.stream().findFirst().get());
+                try {
+                    cmd.executes(landPlayer, lands.stream().findFirst().get());
+                } catch (SQLException e) {
+                    player.sendRichMessage(LandsOutposts.UNEXPECTED_EXCEPTION_MSG);
+                    e.printStackTrace();
+                }
             } else {
                 player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + "/lands-outposts claim <aqua><land></aqua>");
             }
@@ -57,7 +68,12 @@ public class ClaimCommand {
             if (landOptional.isEmpty()) {
                 player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.landNotFound.replace("%name", landName));
             } else {
-                cmd.executes(landPlayer, landOptional.get());
+                try {
+                    cmd.executes(landPlayer, landOptional.get());
+                } catch (SQLException e) {
+                    player.sendRichMessage(LandsOutposts.UNEXPECTED_EXCEPTION_MSG);
+                    e.printStackTrace();
+                }
             }
 
             return Command.SINGLE_SUCCESS;
@@ -75,19 +91,44 @@ public class ClaimCommand {
         })));
     }
 
-    private final void executes(LandPlayer landPlayer, Land land) {
+    private final void executes(LandPlayer landPlayer, Land land) throws SQLException {
         Player player = landPlayer.getPlayer();
-        Chunk playerLocationChunk = player.getLocation().getChunk();
+        Location playerLocation = player.getLocation();
+        Chunk chunk = playerLocation.getChunk();
 
-        Land claimedLand = this.landsOutposts.getLands().getLandByChunk(playerLocationChunk.getWorld(), playerLocationChunk.getX(), playerLocationChunk.getZ());
+        Land claimedLand = this.landsOutposts.getLands().getLandByChunk(chunk.getWorld(), chunk.getX(), chunk.getZ());
         if (claimedLand == null || land.equals(claimedLand)) {
-            if (land.getDefaultArea().hasRoleFlag(player.getUniqueId(), Flags.LAND_CLAIM) && land.getChunksAmount() < land.getMaxChunks()){
-                //TODO claim dispo et outpost dispo ?
+            if (land.getDefaultArea().hasRoleFlag(player.getUniqueId(), Flags.LAND_CLAIM)){
+                int landMaxClaim = land.getMaxChunks();
+                int landMaxOutposts = this.landsOutposts.getLandMaxOutposts(land);
+                
+                if (land.getChunksAmount() >= landMaxClaim) {
+                    player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.maxChunks.replace("%max", String.valueOf(landMaxClaim)));
+                } else if (this.landsOutposts.getLandOutposts(land).size() >= landMaxOutposts) {
+                    player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.maxOutposts.replace("%max", String.valueOf(landMaxOutposts)));
+                } else {
+                    int outpostCost = LandsOutpostsConfiguration.CONF.outpostsCost;
+                    if (land.modifyBalance(Math.negateExact(landMaxOutposts))) {
+                        LandOutpost outpost = new LandOutpost(land.getULID(), playerLocation);
+                        this.landsOutposts.getDatabase().getOutpostsDao().create(outpost);
+                        player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.outpostCreated);
+                        if (claimedLand != null) {
+                            land.claimChunk(landPlayer, playerLocation.getWorld(), chunk.getX(), chunk.getZ()).thenAccept(claim -> {
+                                if (claim) {
+                                    land.calculateLevel(true);
+                                }
+                            });
+                        }
+                    } else {
+                        player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.notEnoughMoney.replace("%cost", String.valueOf(outpostCost)));
+                    }
+                }
             } else {
                 Flags.LAND_CLAIM.sendDenied(landPlayer, land.getDefaultArea());
             }
         } else {
-            //TODO this chunk is own by another land
+            String legacyLandColorName = MiniMessage.miniMessage().serialize(LegacyComponentSerializer.legacySection().deserialize(claimedLand.getColorName()));
+            player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.alreadyClaimedChunk.replace("%land", legacyLandColorName));
         }
     }
 }
