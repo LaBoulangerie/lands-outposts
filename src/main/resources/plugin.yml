@@ -9,4 +9,5 @@ libraries:
   - com.h2database:h2:2.3.232
 commands:
   lands-outposts:
+    aliases: [lo]
     description: "Lands Outposts command"

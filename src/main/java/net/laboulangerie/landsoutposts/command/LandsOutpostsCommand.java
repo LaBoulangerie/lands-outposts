@@ -13,13 +13,13 @@ public class LandsOutpostsCommand {
         throw new IllegalStateException("Utility class");
     }
 
-    public static final LiteralCommandNode<CommandSourceStack> build(LandsOutposts landsOutposts) {
-        LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal("lands-outposts");
+    public static final LiteralCommandNode<CommandSourceStack> build(LandsOutposts landsOutposts, LiteralArgumentBuilder<CommandSourceStack> root) {
         root.then(TeleportCommand.command(landsOutposts));
         root.then(ListCommand.command(landsOutposts));
 
         root.then(ClaimCommand.command(landsOutposts));
         root.then(UnclaimCommand.command(landsOutposts));
+        root.then(InfoCommand.command(landsOutposts));
 
         if (landsOutposts.getTowny() != null) {
             root.then(ImportTownyCommand.command(landsOutposts));
