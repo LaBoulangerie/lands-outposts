@@ -15,6 +15,9 @@ public enum LandsOutpostsLanguage {
         public String landNotFound;
         public String teleportCooldown;
         public String notInALand;
+        public String outpostDeleted;
+        public String noOutpostInChunk;
+        public String chunkNotInLand;
         public String maxChunks;
         public String maxOutposts;
         public String notEnoughMoney;
@@ -30,6 +33,9 @@ public enum LandsOutpostsLanguage {
                 LANG.landNotFound = translator.apply("land_not_found", "Land %name not found.");
                 LANG.teleportCooldown = translator.apply("teleport_cooldown", "Please wait %wait more seconds before teleporting again.");
                 LANG.notInALand = translator.apply("not_in_a_land", "You are not member of any land.");
+                LANG.outpostDeleted = translator.apply("outpost_deleted", "Outpost deleted.");
+                LANG.noOutpostInChunk = translator.apply("no_outpost_in_chunk", "No outpost detected in this chunk.");
+                LANG.chunkNotInLand = translator.apply("chunk_not_in_land", "This chunk is not in any land.");
                 LANG.maxChunks = translator.apply("max_chunks", "Maximum claimed chunks reached (max %max).");
                 LANG.maxOutposts = translator.apply("max_outposts", "Maximum outposts reached (max %max).");
                 LANG.notEnoughMoney = translator.apply("not_enough_money", "pauvre %cost");
