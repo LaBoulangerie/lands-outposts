@@ -27,4 +27,8 @@ public class LandsOutpostsCommand {
 
         return root.build();
     }
+
+    public static final LiteralCommandNode<CommandSourceStack> buildAliases(LiteralCommandNode<CommandSourceStack> root) {
+        return Commands.literal("lo").redirect(root).build();
+    }
 }

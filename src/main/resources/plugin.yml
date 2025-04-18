@@ -10,3 +10,5 @@ libraries:
 commands:
   lands-outposts:
     description: "Lands Outposts command"
+  lo:
+    description: "Lands Outposts short command"
