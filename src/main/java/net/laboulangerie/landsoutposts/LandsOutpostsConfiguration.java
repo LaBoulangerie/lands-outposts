@@ -1,5 +1,8 @@
 package net.laboulangerie.landsoutposts;
 
+import java.util.HashMap;
+import java.util.Set;
+
 import org.bukkit.configuration.file.FileConfiguration;
 
 public enum LandsOutpostsConfiguration {
@@ -12,7 +15,9 @@ public enum LandsOutpostsConfiguration {
      */
     public String language = "custom";
 
-    public int maxOutpostsPerLand = 1;
+    public HashMap<Integer, Integer> landLevelsMaxOutposts = new HashMap<>();
+    public HashMap<Integer, Integer> nationLevelsBonusOutposts = new HashMap<>();
+
     public int outpostsCost = 4096;
     public int outpostsTeleportCooldown = 60;
 
@@ -20,7 +25,25 @@ public enum LandsOutpostsConfiguration {
 
     public void readConfig(FileConfiguration savedConfig) {
         CONF.language = savedConfig.getString("language", "custom");
-        CONF.maxOutpostsPerLand = savedConfig.getInt("max_outposts_per_land", 1);
+
+        CONF.landLevelsMaxOutposts.clear();
+        for (String key : savedConfig.getConfigurationSection("land_levels").getKeys(false)) {
+            try {
+                CONF.landLevelsMaxOutposts.put(Integer.parseInt(key), savedConfig.getInt("land_levels." + key + ".outposts", 1));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        CONF.nationLevelsBonusOutposts.clear();
+        for (String key : savedConfig.getConfigurationSection("nation_levels").getKeys(false)) {
+            try {
+                CONF.nationLevelsBonusOutposts.put(Integer.parseInt(key), savedConfig.getInt("nation_levels." + key + ".bonus_outposts", 1));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
         CONF.outpostsCost = savedConfig.getInt("outposts_cost", 4096);
         CONF.outpostsCost = savedConfig.getInt("outposts_teleport_cooldown", 60);
         CONF.debug = savedConfig.getBoolean("debug", false);

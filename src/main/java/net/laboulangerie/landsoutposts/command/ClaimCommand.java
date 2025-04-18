@@ -30,7 +30,7 @@ public class ClaimCommand {
     public static final LiteralArgumentBuilder<CommandSourceStack> command(LandsOutposts landsOutposts) {
         ClaimCommand cmd = new ClaimCommand(landsOutposts);
 
-        return Commands.literal("list")
+        return Commands.literal("claim")
         .requires(sender -> sender.getSender() instanceof Player)
         .executes(ctx -> {
             Player player = (Player) ctx.getSource().getSender();
