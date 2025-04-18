@@ -174,6 +174,11 @@ public class LandsOutposts extends JavaPlugin {
         return outposts;
     }
 
+    public int getLandMaxOutposts(Land land) {
+        
+        return 0;
+    }
+
     public List<LandOutpost> getLandOutposts(Land land) throws SQLException {
         return this.database.getOutpostsDao().queryBuilder().where().eq("land_id", land.getULID().toString()).query();
     }

@@ -13,6 +13,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
+import me.angeschossen.lands.api.flags.type.Flags;
 import me.angeschossen.lands.api.land.Land;
 import me.angeschossen.lands.api.player.LandPlayer;
 import net.laboulangerie.landsoutposts.LandsOutposts;
@@ -38,10 +39,10 @@ public class ClaimCommand {
 
             if (lands.isEmpty()) {
                 player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.notInALand);
-            } else if (lands.size() > 1) {
-                player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + "/lands-outposts claim <aqua><land></aqua>");
-            } else {
+            } else if (lands.size() == 1) {
                 cmd.executes(landPlayer, lands.stream().findFirst().get());
+            } else {
+                player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + "/lands-outposts claim <aqua><land></aqua>");
             }
 
             return Command.SINGLE_SUCCESS;
@@ -57,7 +58,7 @@ public class ClaimCommand {
                 player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.landNotFound.replace("%name", landName));
             } else {
                 cmd.executes(landPlayer, landOptional.get());
-            }           
+            }
 
             return Command.SINGLE_SUCCESS;
         }).suggests((ctx, builder) -> CompletableFuture.supplyAsync(() -> {
@@ -76,7 +77,17 @@ public class ClaimCommand {
 
     private final void executes(LandPlayer landPlayer, Land land) {
         Player player = landPlayer.getPlayer();
+        Chunk playerLocationChunk = player.getLocation().getChunk();
 
-        //TODO
+        Land claimedLand = this.landsOutposts.getLands().getLandByChunk(playerLocationChunk.getWorld(), playerLocationChunk.getX(), playerLocationChunk.getZ());
+        if (claimedLand == null || land.equals(claimedLand)) {
+            if (land.getDefaultArea().hasRoleFlag(player.getUniqueId(), Flags.LAND_CLAIM) && land.getChunksAmount() < land.getMaxChunks()){
+                //TODO claim dispo et outpost dispo ?
+            } else {
+                Flags.LAND_CLAIM.sendDenied(landPlayer, land.getDefaultArea());
+            }
+        } else {
+            //TODO this chunk is own by another land
+        }
     }
 }
