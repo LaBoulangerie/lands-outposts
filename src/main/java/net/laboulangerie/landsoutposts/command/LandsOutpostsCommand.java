@@ -19,7 +19,7 @@ public class LandsOutpostsCommand {
         root.then(ListCommand.command(landsOutposts));
 
         root.then(ClaimCommand.command(landsOutposts));
-        root.then(UnclaimCommand.command());
+        root.then(UnclaimCommand.command(landsOutposts));
 
         if (landsOutposts.getTowny() != null) {
             root.then(ImportTownyCommand.command(landsOutposts));
