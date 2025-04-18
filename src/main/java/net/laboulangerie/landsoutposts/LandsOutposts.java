@@ -12,6 +12,8 @@ import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import me.angeschossen.lands.api.LandsIntegration;
 import me.angeschossen.lands.api.land.Area;
 import me.angeschossen.lands.api.land.Land;
+import me.angeschossen.lands.api.levels.Level;
+import me.angeschossen.lands.api.nation.Nation;
 import me.angeschossen.lands.api.player.LandPlayer;
 import net.laboulangerie.landsoutposts.command.LandsOutpostsCommand;
 import net.laboulangerie.landsoutposts.database.LandOutpost;
@@ -50,11 +52,12 @@ public class LandsOutposts extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        LOGGER = this.getLogger();
+        
         // load and init configuration
         saveDefaultConfig(); // saves default configuration if no config.yml exists yet
         reloadConfig();
 
-        LOGGER = this.getLogger();
         debugMsg("Plugin debug enabled.");
     }
 
@@ -85,8 +88,7 @@ public class LandsOutposts extends JavaPlugin {
         }
 
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
-            commands.registrar().register(LandsOutpostsCommand.build(this, Commands.literal("lands-outposts")));
-            commands.registrar().register(LandsOutpostsCommand.build(this, Commands.literal("lo")));
+            LandsOutpostsCommand.build(this, commands.registrar());
         });
 
         getServer().getPluginManager().registerEvents(new onUnclaim(instance), this);
@@ -177,6 +179,30 @@ public class LandsOutposts extends JavaPlugin {
         }
 
         return outposts;
+    }
+
+    public int getLandMaxOutposts(Land land) {
+        Level landLevel = land.getLevel();
+
+        if (!LandsOutpostsConfiguration.CONF.landLevelsMaxOutposts.containsKey(landLevel.getName())) {
+            LandsOutposts.LOGGER.warning("Missing land level " + landLevel.getName() + " in config.yml");
+            return 0;
+        }
+
+        int max = LandsOutpostsConfiguration.CONF.landLevelsMaxOutposts.get(landLevel.getName());
+
+        Nation nation = land.getNation();
+        if (nation != null) {
+            Level nationLevel = nation.getLevel();
+
+            if (LandsOutpostsConfiguration.CONF.nationLevelsBonusOutposts.containsKey(nationLevel.getName())) {
+                max += LandsOutpostsConfiguration.CONF.nationLevelsBonusOutposts.get(nationLevel.getName());
+            } else {
+                LandsOutposts.LOGGER.warning("Missing nation level " + nationLevel.getName() + " in config.yml");
+            }
+        }
+
+        return max;
     }
 
     public List<LandOutpost> getLandOutposts(Land land) throws SQLException {
