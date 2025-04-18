@@ -6,3 +6,4 @@ teleport_cooldown: "Attendez encore %wait secondes avant d'essayer de vous tél�
 not_in_a_land: "Vous n'êtes membre d'aucune ville."
 outpost_deleted: "Avant-poste supprimé."
 no_outpost_in_chunk : "Aucun avant-poste détecté dans ce chunk."
+chunk_not_in_land: "Ce chunk n'est pas dans une ville."

@@ -17,6 +17,7 @@ public enum LandsOutpostsLanguage {
         public String notInALand;
         public String outpostDeleted;
         public String noOutpostInChunk;
+        public String chunkNotInLand;
 
         public void readLanguage(FileConfiguration savedLanguage) {
                 BiFunction<String, String, String> translator = (path, def) -> ChatColor.translateAlternateColorCodes('&', savedLanguage.getString(path, def));
@@ -29,5 +30,6 @@ public enum LandsOutpostsLanguage {
                 LANG.notInALand = translator.apply("not_in_a_land", "You are not member of any land.");
                 LANG.outpostDeleted = translator.apply("outpost_deleted", "Outpost deleted.");
                 LANG.noOutpostInChunk = translator.apply("no_outpost_in_chunk", "No outpost detected in this chunk.");
+                LANG.chunkNotInLand = translator.apply("chunk_not_in_land", "This chunk is not in any land.");
         }
 }
