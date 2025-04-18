@@ -5,10 +5,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.palmergames.bukkit.towny.TownyUniverse;
 
-import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import me.angeschossen.lands.api.LandsIntegration;
 import me.angeschossen.lands.api.land.Area;
@@ -85,9 +83,7 @@ public class LandsOutposts extends JavaPlugin {
         }
 
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
-            LiteralCommandNode<CommandSourceStack> cmd = LandsOutpostsCommand.build(this);
-            commands.registrar().register(cmd);
-            commands.registrar().register(LandsOutpostsCommand.buildAliases(cmd));
+            LandsOutpostsCommand.build(this, commands.registrar());
         });
     }
 

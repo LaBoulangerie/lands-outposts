@@ -1,7 +1,6 @@
 package net.laboulangerie.landsoutposts.command;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.tree.LiteralCommandNode;
 
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import io.papermc.paper.command.brigadier.Commands;
@@ -9,26 +8,37 @@ import net.laboulangerie.landsoutposts.LandsOutposts;
 
 public class LandsOutpostsCommand {
 
+    private final LiteralArgumentBuilder<CommandSourceStack> cmd;
+    private final LiteralArgumentBuilder<CommandSourceStack> cmdAlias;
+
     private LandsOutpostsCommand() {
-        throw new IllegalStateException("Utility class");
+        this.cmd = Commands.literal("lands-outposts");
+        this.cmdAlias = Commands.literal("lo");
     }
 
-    public static final LiteralCommandNode<CommandSourceStack> build(LandsOutposts landsOutposts) {
-        LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal("lands-outposts");
-        root.then(TeleportCommand.command(landsOutposts));
-        root.then(ListCommand.command(landsOutposts));
+    private void registerSubCommand(LiteralArgumentBuilder<CommandSourceStack> subCommand) {
+        this.cmd.then(subCommand);
+        this.cmdAlias.then(subCommand);
+    }
 
-        root.then(ClaimCommand.command(landsOutposts));
-        root.then(UnclaimCommand.command());
+    private void registar(Commands registrar) {
+        registrar.register(this.cmd.build());
+        registrar.register(this.cmdAlias.build());
+    }
+
+    public static final void build(LandsOutposts landsOutposts, Commands registrar) {
+        LandsOutpostsCommand cmd = new LandsOutpostsCommand();
+
+        cmd.registerSubCommand(TeleportCommand.command(landsOutposts));
+        cmd.registerSubCommand(ListCommand.command(landsOutposts));
+
+        cmd.registerSubCommand(ClaimCommand.command(landsOutposts));
+        cmd.registerSubCommand(UnclaimCommand.command());
 
         if (landsOutposts.getTowny() != null) {
-            root.then(ImportTownyCommand.command(landsOutposts));
+            cmd.registerSubCommand(ImportTownyCommand.command(landsOutposts));
         }
 
-        return root.build();
-    }
-
-    public static final LiteralCommandNode<CommandSourceStack> buildAliases(LiteralCommandNode<CommandSourceStack> root) {
-        return Commands.literal("lo").redirect(root).build();
+        cmd.registar(registrar);
     }
 }
