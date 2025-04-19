@@ -1,5 +1,5 @@
 outposts: "Avant-postes"
-click_to_teleport: "Cliquer pour se teleport à l'avant-poste."
+click_to_teleport: "Cliquer pour se teleport à l\\'avant-poste."
 outpost_not_found: "L'avant-poste n'existe pas."
 land_not_found: "La ville %name n'existe pas."
 teleport_cooldown: "Attendez encore %wait secondes avant d'essayer de vous téléporter."

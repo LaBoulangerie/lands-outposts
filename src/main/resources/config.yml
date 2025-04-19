@@ -1,4 +1,4 @@
-# supported languages: "custom" (default, english), "de" (german), "fr" (french), and "pt-BR" (brazilian portuguese).
+# supported languages: "custom" (default, english), "fr" (french).
 language: custom
 
 # Maximum number of outpost a land/nation can own per levels
