@@ -14,8 +14,8 @@ public enum LandsOutpostsConfiguration {
      */
     public String language = "custom";
 
-    public HashMap<String, Integer> landLevelsMaxOutposts = new HashMap<>();
-    public HashMap<String, Integer> nationLevelsBonusOutposts = new HashMap<>();
+    public HashMap<Integer, Integer> landLevelsMaxOutposts = new HashMap<>();
+    public HashMap<Integer, Integer> nationLevelsBonusOutposts = new HashMap<>();
 
     public int outpostsCost = 4096;
     public int outpostsTeleportCooldown = 60;
@@ -31,7 +31,7 @@ public enum LandsOutpostsConfiguration {
             try {
                 int max = savedConfig.getInt("land_levels." + key + ".outposts", 1);
                 LandsOutposts.LOGGER.info("Land Levels: " + key + " max outposts: " + max);
-                CONF.landLevelsMaxOutposts.put(key, max);
+                CONF.landLevelsMaxOutposts.put(Integer.parseInt(key), max);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -42,7 +42,7 @@ public enum LandsOutpostsConfiguration {
             try {
                 int bonus = savedConfig.getInt("nation_levels." + key + ".bonus_outposts", 1);
                 LandsOutposts.LOGGER.info("Nation Levels: " + key + " bonus outposts: " + bonus);
-                CONF.nationLevelsBonusOutposts.put(key, bonus);
+                CONF.nationLevelsBonusOutposts.put(Integer.parseInt(key), bonus);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -182,19 +182,19 @@ public class LandsOutposts extends JavaPlugin {
     public int getLandMaxOutposts(Land land) {
         Level landLevel = land.getLevel();
 
-        if (!LandsOutpostsConfiguration.CONF.landLevelsMaxOutposts.containsKey(landLevel.getName())) {
+        if (!LandsOutpostsConfiguration.CONF.landLevelsMaxOutposts.containsKey(landLevel.getPosition())) {
             LandsOutposts.LOGGER.warning("Missing land level " + landLevel.getName() + " in config.yml");
             return 0;
         }
 
-        int max = LandsOutpostsConfiguration.CONF.landLevelsMaxOutposts.get(landLevel.getName());
+        int max = LandsOutpostsConfiguration.CONF.landLevelsMaxOutposts.get(landLevel.getPosition());
 
         Nation nation = land.getNation();
         if (nation != null) {
             Level nationLevel = nation.getLevel();
 
-            if (LandsOutpostsConfiguration.CONF.nationLevelsBonusOutposts.containsKey(nationLevel.getName())) {
-                max += LandsOutpostsConfiguration.CONF.nationLevelsBonusOutposts.get(nationLevel.getName());
+            if (LandsOutpostsConfiguration.CONF.nationLevelsBonusOutposts.containsKey(nationLevel.getPosition())) {
+                max += LandsOutpostsConfiguration.CONF.nationLevelsBonusOutposts.get(nationLevel.getPosition());
             } else {
                 LandsOutposts.LOGGER.warning("Missing nation level " + nationLevel.getName() + " in config.yml");
             }
