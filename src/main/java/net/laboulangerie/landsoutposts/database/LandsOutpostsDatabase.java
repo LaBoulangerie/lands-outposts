@@ -21,7 +21,7 @@ public class LandsOutpostsDatabase {
         this.logger = landsOutposts.getLogger();
 
         File db = new File(landsOutposts.getDataFolder(), landsOutposts.getName());
-        this.connection = new JdbcPooledConnectionSource("jdbc:h2:./" + db.toPath());
+        this.connection = new JdbcPooledConnectionSource("jdbc:sqlite:./" + db.toPath() + ".db");
         this.logger.fine("Opened database successfully");
 
         this.outpostsDao = DaoManager.createDao(this.connection, LandOutpost.class);

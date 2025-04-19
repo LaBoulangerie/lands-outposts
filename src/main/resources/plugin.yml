@@ -6,7 +6,7 @@ authors: [LaBoulangerie,Clem]
 depend: [Lands]
 libraries:
   - com.j256.ormlite:ormlite-jdbc:6.1
-  - com.h2database:h2:2.3.232
+  - org.xerial:sqlite-jdbc:3.49.1.0
 commands:
   lands-outposts:
     description: "Lands Outposts command"
