@@ -49,6 +49,6 @@ public enum LandsOutpostsConfiguration {
         }
 
         CONF.outpostsCost = savedConfig.getInt("outposts_cost", 4096);
-        CONF.outpostsCost = savedConfig.getInt("outposts_teleport_cooldown", 60);
+        CONF.outpostsTeleportCooldown = savedConfig.getInt("outposts_teleport_cooldown", 60);
     }
 }
