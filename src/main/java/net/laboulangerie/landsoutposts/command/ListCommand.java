@@ -81,6 +81,7 @@ public class ListCommand {
             for (Land land : lands) {
                 player.sendRichMessage("<dark_gray>____.[</dark_gray> <dark_green>" + LandsOutpostsLanguage.LANG.outposts + ":</dark_green> "
                 + MiniMessage.miniMessage().serialize(LegacyComponentSerializer.legacySection().deserialize(land.getColorName()))
+                + "<dark_green>" + landsOutposts.getLandOutposts(land).size() + "/" + landsOutposts.getLandMaxOutposts(land)
                 + "<dark_gray>].____</dark_gray>");
 
                 outposts.forEach((name, landOutpost) -> {
