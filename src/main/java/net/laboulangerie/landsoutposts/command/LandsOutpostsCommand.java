@@ -33,7 +33,7 @@ public class LandsOutpostsCommand {
         cmd.registerSubCommand(ListCommand.command(landsOutposts));
 
         cmd.registerSubCommand(ClaimCommand.command(landsOutposts));
-        cmd.registerSubCommand(UnclaimCommand.command());
+        cmd.registerSubCommand(UnclaimCommand.command(landsOutposts));
 
         if (landsOutposts.getTowny() != null) {
             cmd.registerSubCommand(ImportTownyCommand.command(landsOutposts));

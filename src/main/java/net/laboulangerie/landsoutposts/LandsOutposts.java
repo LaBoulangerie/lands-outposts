@@ -88,6 +88,8 @@ public class LandsOutposts extends JavaPlugin {
         this.getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
             LandsOutpostsCommand.build(this, commands.registrar());
         });
+
+        getServer().getPluginManager().registerEvents(new LandsOutpostsListener(this), this);
     }
 
     @Override
