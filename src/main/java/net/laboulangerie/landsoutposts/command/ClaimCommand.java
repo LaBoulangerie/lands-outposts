@@ -108,7 +108,7 @@ public class ClaimCommand {
                     player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.maxOutposts.replace("%max", String.valueOf(landMaxOutposts)));
                 } else {
                     int outpostCost = LandsOutpostsConfiguration.CONF.outpostsCost;
-                    if (land.modifyBalance(Math.negateExact(landMaxOutposts))) {
+                    if (land.modifyBalance(Math.negateExact(outpostCost))) {
                         LandOutpost outpost = new LandOutpost(land.getULID(), playerLocation);
                         this.landsOutposts.getDatabase().getOutpostsDao().create(outpost);
                         player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.outpostCreated);

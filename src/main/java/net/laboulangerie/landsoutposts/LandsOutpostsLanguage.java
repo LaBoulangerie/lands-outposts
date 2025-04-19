@@ -38,7 +38,7 @@ public enum LandsOutpostsLanguage {
                 LANG.chunkNotInLand = translator.apply("chunk_not_in_land", "This chunk is not in any land.");
                 LANG.maxChunks = translator.apply("max_chunks", "Maximum claimed chunks reached (max %max).");
                 LANG.maxOutposts = translator.apply("max_outposts", "Maximum outposts reached (max %max).");
-                LANG.notEnoughMoney = translator.apply("not_enough_money", "pauvre %cost");
+                LANG.notEnoughMoney = translator.apply("not_enough_money", "Not enough money (cost %cost).");
                 LANG.alreadyClaimedChunk = translator.apply("already_claimed_chunk", "Chunk already claimed by %land.");
                 LANG.outpostCreated = translator.apply("outpost_created", "Outpost successfully created.");
 
