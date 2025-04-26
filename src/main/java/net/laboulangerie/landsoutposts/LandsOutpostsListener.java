@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 
 import me.angeschossen.lands.api.events.ChunkDeleteEvent;
 import me.angeschossen.lands.api.events.LandDeleteEvent;
+import me.angeschossen.lands.api.player.LandPlayer;
 import net.laboulangerie.landsoutposts.database.LandOutpost;
 
 public class LandsOutpostsListener implements Listener {
@@ -43,6 +44,7 @@ public class LandsOutpostsListener implements Listener {
 
     @EventHandler
     public void onUnclaimEvent(ChunkDeleteEvent event) {
+        LandPlayer landPlayer = event.getLandPlayer();
         event.getWorld().getChunkAtAsync(event.getX(), event.getZ()).thenAccept(chunk -> {
             List<LandOutpost> outposts;
             try {
@@ -58,6 +60,9 @@ public class LandsOutpostsListener implements Listener {
                     try {
                         if (landsOutposts.getDatabase().getOutpostsDao().delete(outpost) != 0) {
                             LandsOutposts.debugMsg(event.getLand().getName() + " " + outpost.getSpawn() + " outpost deleted.");
+                            if (landPlayer != null) {
+                                landPlayer.getPlayer().sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.outpostDeleted);
+                            }
                         }
                     } catch (SQLException e) {
                         LandsOutposts.LOGGER.warning(event.getLandPlayer().getName() + " " + outpost.getSpawn() + " outpost deletion error.");
