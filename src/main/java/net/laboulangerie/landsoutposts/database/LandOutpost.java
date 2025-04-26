@@ -16,10 +16,7 @@ public class LandOutpost {
     public LandOutpost(ULID ulid, Location spawn) {
         this.landId = ulid.toString();
         
-        this.world = spawn.getWorld().getName();
-        this.spawnX = spawn.getX();
-        this.spawnY = spawn.getY();
-        this.spawnZ = spawn.getZ();
+        this.setSpawn(spawn);
     }
 
     @DatabaseField(columnName = "outpost_id", generatedId = true)
@@ -47,6 +44,13 @@ public class LandOutpost {
 
     public Location getSpawn() {
         return new Location(Bukkit.getWorld(this.world), this.spawnX, this.spawnY, this.spawnZ);
+    }
+
+    public void setSpawn(Location spawn) {
+        this.world = spawn.getWorld().getName();
+        this.spawnX = spawn.getX();
+        this.spawnY = spawn.getY();
+        this.spawnZ = spawn.getZ();
     }
 
 }

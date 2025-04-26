@@ -13,4 +13,4 @@ not_enough_money: "Vous n'avez pas assez d'argent pour créer un nouvel outpost 
 already_claimed_chunk: "Ce chunk appartient déjà à %land."
 outpost_created: "Avant-poste créé avec succès."
 unable_to_claim: "Impossible de claim le chunk (pas assez d'argent ?)."
-outpost_already_in_chunk: "Un avant-poste est déjà présent dans ce chunk."
+outpost_spawn_updated: "Spawn de l'avant-poste mis à jour."

@@ -111,7 +111,9 @@ public class ClaimCommand {
                     for (LandOutpost outpost : this.landsOutposts.getLandOutposts(land)) {
                         Chunk outpostChunk = outpost.getSpawn().getChunk();
                         if (outpostChunk.equals(chunk)) {
-                            player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.outpostAlreadyInChunk);
+                            outpost.setSpawn(playerLocation);
+                            this.landsOutposts.getDatabase().getOutpostsDao().update(outpost);
+                            player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.outpostSpawnUpdated);
                             return;
                         }
                     }
