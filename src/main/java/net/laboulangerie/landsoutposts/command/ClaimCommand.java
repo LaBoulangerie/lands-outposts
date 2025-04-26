@@ -117,6 +117,14 @@ public class ClaimCommand {
                         }
 
                         if (result.result || claimedLand != null) {
+                            for (LandOutpost outpost : this.landsOutposts.getLandOutposts(land)) {
+                                Chunk outpostChunk = outpost.getSpawn().getChunk();
+                                if (outpostChunk.equals(chunk)) {
+                                    player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.outpostAlreadyInChunk);
+                                    return;
+                                }
+                            }
+                            
                             LandOutpost outpost = new LandOutpost(land.getULID(), playerLocation);
                             this.landsOutposts.getDatabase().getOutpostsDao().create(outpost);
                             player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.outpostCreated);
