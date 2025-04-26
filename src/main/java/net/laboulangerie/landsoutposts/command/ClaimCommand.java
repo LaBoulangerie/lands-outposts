@@ -108,6 +108,14 @@ public class ClaimCommand {
                 } else if (this.landsOutposts.getLandOutposts(land).size() >= landMaxOutposts) {
                     player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.maxOutposts.replace("%max", String.valueOf(landMaxOutposts)));
                 } else {
+                    for (LandOutpost outpost : this.landsOutposts.getLandOutposts(land)) {
+                        Chunk outpostChunk = outpost.getSpawn().getChunk();
+                        if (outpostChunk.equals(chunk)) {
+                            player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.outpostAlreadyInChunk);
+                            return;
+                        }
+                    }
+                    
                     int outpostCost = LandsOutpostsConfiguration.CONF.outpostsCost;
                     if (land.modifyBalance(Math.negateExact(outpostCost))) {
                         ClaimResult result = new ClaimResult();
@@ -116,15 +124,7 @@ public class ClaimCommand {
                             result.result = true;
                         }
 
-                        if (result.result || claimedLand != null) {
-                            for (LandOutpost outpost : this.landsOutposts.getLandOutposts(land)) {
-                                Chunk outpostChunk = outpost.getSpawn().getChunk();
-                                if (outpostChunk.equals(chunk)) {
-                                    player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.outpostAlreadyInChunk);
-                                    return;
-                                }
-                            }
-                            
+                        if (result.result || claimedLand != null) {                            
                             LandOutpost outpost = new LandOutpost(land.getULID(), playerLocation);
                             this.landsOutposts.getDatabase().getOutpostsDao().create(outpost);
                             player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.outpostCreated);
