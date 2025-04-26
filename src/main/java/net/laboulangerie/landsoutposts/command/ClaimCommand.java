@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -48,7 +49,7 @@ public class ClaimCommand {
             } else if (lands.size() == 1) {
                 try {
                     cmd.executes(landPlayer, lands.stream().findFirst().get());
-                } catch (SQLException e) {
+                } catch (SQLException | InterruptedException | ExecutionException e) {
                     player.sendRichMessage(LandsOutposts.UNEXPECTED_EXCEPTION_MSG);
                     e.printStackTrace();
                 }
@@ -70,7 +71,7 @@ public class ClaimCommand {
             } else {
                 try {
                     cmd.executes(landPlayer, landOptional.get());
-                } catch (SQLException e) {
+                } catch (SQLException | InterruptedException | ExecutionException e) {
                     player.sendRichMessage(LandsOutposts.UNEXPECTED_EXCEPTION_MSG);
                     e.printStackTrace();
                 }
@@ -91,7 +92,7 @@ public class ClaimCommand {
         })));
     }
 
-    private final void executes(LandPlayer landPlayer, Land land) throws SQLException {
+    private final void executes(LandPlayer landPlayer, Land land) throws SQLException, InterruptedException, ExecutionException {
         Player player = landPlayer.getPlayer();
         Location playerLocation = player.getLocation();
         Chunk chunk = playerLocation.getChunk();
@@ -109,16 +110,20 @@ public class ClaimCommand {
                 } else {
                     int outpostCost = LandsOutpostsConfiguration.CONF.outpostsCost;
                     if (land.modifyBalance(Math.negateExact(outpostCost))) {
-                        LandOutpost outpost = new LandOutpost(land.getULID(), playerLocation);
-                        this.landsOutposts.getDatabase().getOutpostsDao().create(outpost);
-                        player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.outpostCreated);
-                        if (claimedLand != null) {
-                            land.claimChunk(landPlayer, playerLocation.getWorld(), chunk.getX(), chunk.getZ()).thenAccept(claim -> {
-                                if (claim) {
-                                    land.calculateLevel(true);
-                                }
-                            });
+                        ClaimResult result = new ClaimResult();
+                        if (claimedLand == null && land.claimChunk(landPlayer, playerLocation.getWorld(), chunk.getX(), chunk.getZ()).get()) {
+                            land.calculateLevel(true);
+                            result.result = true;
                         }
+
+                        if (result.result || claimedLand != null) {
+                            LandOutpost outpost = new LandOutpost(land.getULID(), playerLocation);
+                            this.landsOutposts.getDatabase().getOutpostsDao().create(outpost);
+                            player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.outpostCreated);
+                        } else {
+                            player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.unableToClaimChunk);
+                        }
+                        
                     } else {
                         player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.notEnoughMoney.replace("%cost", String.valueOf(outpostCost)));
                     }
@@ -130,5 +135,9 @@ public class ClaimCommand {
             String legacyLandColorName = MiniMessage.miniMessage().serialize(LegacyComponentSerializer.legacySection().deserialize(claimedLand.getColorName()));
             player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.alreadyClaimedChunk.replace("%land", legacyLandColorName));
         }
+    }
+
+    private static final class ClaimResult {
+        protected boolean result = false;        
     }
 }
