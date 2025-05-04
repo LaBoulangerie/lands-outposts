@@ -23,6 +23,8 @@ public enum LandsOutpostsLanguage {
         public String notEnoughMoney;
         public String alreadyClaimedChunk;
         public String outpostCreated;
+        public String unableToClaimChunk;
+        public String outpostSpawnUpdated;
 
         public void readLanguage(FileConfiguration savedLanguage) {
                 BiFunction<String, String, String> translator = (path, def) -> ChatColor.translateAlternateColorCodes('&', savedLanguage.getString(path, def));
@@ -41,6 +43,8 @@ public enum LandsOutpostsLanguage {
                 LANG.notEnoughMoney = translator.apply("not_enough_money", "Not enough money (cost %cost).");
                 LANG.alreadyClaimedChunk = translator.apply("already_claimed_chunk", "Chunk already claimed by %land.");
                 LANG.outpostCreated = translator.apply("outpost_created", "Outpost successfully created.");
+                LANG.unableToClaimChunk = translator.apply("unable_to_claim", "Unable to claim chunk (not enough money ?).");
+                LANG.outpostSpawnUpdated = translator.apply("outpost_spawn_updated", "Outpost spawn updated.");
 
         }
 }
