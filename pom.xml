@@ -30,8 +30,8 @@
     <repositories>
         <repository>
             <id>papermc</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
-        </repository>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
+          </repository>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
