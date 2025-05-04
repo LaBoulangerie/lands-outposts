@@ -1,0 +1,44 @@
+# supported languages: "custom" (default, english), "fr" (french).
+language: custom
+
+# Maximum number of outpost a land/nation can own per levels
+land_levels:
+  '1':
+    outposts: 2
+  '2':
+    outposts: 3
+  '3':
+    outposts: 4
+  '4':
+    outposts: 5
+  '5':
+    outposts: 6
+  '6':
+    outposts: 7
+  '7':
+    outposts: 8
+  '8':
+    outposts: 9
+
+nation_levels:
+  '1':
+    bonus_outposts: 1
+  '2':
+    bonus_outposts: 2
+  '3':
+    bonus_outposts: 3
+  '4':
+    bonus_outposts: 4
+  '5':
+    bonus_outposts: 5
+  '6':
+    bonus_outposts: 6
+
+# Cost of outpost creation
+outposts_cost: 4096
+
+# Outpost teleportation cooldown
+outposts_teleport_cooldown: 60
+
+# Plugin debug
+debug: false

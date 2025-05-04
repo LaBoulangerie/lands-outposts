@@ -1,0 +1,14 @@
+name: lands-outposts
+version: ${project.version}
+main: net.laboulangerie.landsoutposts.LandsOutposts
+api-version: '1.21.1'
+authors: [LaBoulangerie,Clem]
+depend: [Lands]
+libraries:
+  - com.j256.ormlite:ormlite-jdbc:6.1
+  - org.xerial:sqlite-jdbc:3.49.1.0
+commands:
+  lands-outposts:
+    description: "Lands Outposts command"
+  lo:
+    description: "Lands Outposts short command"
