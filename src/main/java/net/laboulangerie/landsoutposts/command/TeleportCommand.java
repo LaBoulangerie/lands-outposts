@@ -2,7 +2,9 @@ package net.laboulangerie.landsoutposts.command;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -28,11 +30,13 @@ public class TeleportCommand {
         this.commandCooldown = new HashMap<>();
         landsOutposts.getServer().getScheduler().runTaskTimerAsynchronously(landsOutposts, () -> {
             LandsOutposts.debugMsg("Cooldown cleanup task.");
-            for (Map.Entry<UUID,Long> entry : commandCooldown.entrySet()) {
+            Iterator it = commandCooldown.entrySet().iterator();
+            while(it.hasNext()){
+                Map.Entry<UUID,Long> entry = (Entry<UUID, Long>) it.next();
                 if ((System.currentTimeMillis() - entry.getValue()) > (LandsOutpostsConfiguration.CONF.outpostsTeleportCooldown * 1000)) {
-                    commandCooldown.remove(entry.getKey());
+                    it.remove();
                 }
-            } 
+            }
         }, 72000, 72000);
     }
 
