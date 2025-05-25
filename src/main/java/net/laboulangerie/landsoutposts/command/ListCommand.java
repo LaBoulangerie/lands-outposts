@@ -76,6 +76,12 @@ public class ListCommand {
 
     private final void executes(LandPlayer landPlayer, Collection<? extends Land> lands) {
         Player player = landPlayer.getPlayer();
+
+        if (lands.isEmpty()) {
+            player.sendRichMessage(LandsOutposts.LANDSOUTPOSTS_BASE_MSG + LandsOutpostsLanguage.LANG.notInALand);
+            return;
+        }
+
         try {
             HashMap<String,LandOutpost> outposts = this.landsOutposts.getPlayerLandsOutposts(landPlayer, false);
             for (Land land : lands) {
